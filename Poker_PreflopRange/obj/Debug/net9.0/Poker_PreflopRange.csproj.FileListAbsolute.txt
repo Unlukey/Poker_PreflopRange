@@ -38,8 +38,6 @@ c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\Microsoft.Win32.Registry.rcu343ydbj.wasm
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\mscorlib.ypkr78tz1c.wasm
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\netstandard.ifx8vojh9u.wasm
-c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\Poker_PreflopRange.aujbvquc47.pdb
-c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\Poker_PreflopRange.nmqadmi0dd.wasm
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.AppContext.00rm2k4rqj.wasm
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.Buffers.z32pttvtk4.wasm
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.Collections.Concurrent.rx21q3n11f.wasm
@@ -223,7 +221,6 @@ c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\dotnet.native.swgexbmoy7.wasm.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.Net.Quic.5ac51dyvls.wasm.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.Threading.Tasks.Parallel.k8t7rlfiat.wasm.gz
-c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\Poker_PreflopRange.nmqadmi0dd.wasm.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.Threading.Tasks.Extensions.hs7o6v5tiq.wasm.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.IO.Compression.em8v7c7339.wasm.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\netstandard.ifx8vojh9u.wasm.gz
@@ -314,7 +311,6 @@ c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.Xml.XmlSerializer.69wknkil2z.wasm.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.Reflection.Emit.ILGeneration.n2z595t7zv.wasm.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.Security.Cryptography.Cng.uqhggvgrxh.wasm.gz
-c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\Poker_PreflopRange.aujbvquc47.pdb.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.Configuration.s48boytfg6.wasm.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\Microsoft.CSharp.wjcmf9ahqt.wasm.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\System.Security.Claims.845vwhbngt.wasm.gz
@@ -1064,9 +1060,6 @@ c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\compressed\2gw6iy8mmk-tjcz0u77k5.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\compressed\295xpyzpk3-tptq2av103.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\compressed\eb1vv3yj08-lfu7j35m59.gz
-c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\compressed\3cpr90n22w-nmqadmi0dd.gz
-c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\compressed\ippv6ysdn8-aujbvquc47.gz
-c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\compressed\mox8krtpit-fz445o5ljs.gz
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\staticwebassets.build.json
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\staticwebassets.development.json
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\staticwebassets.build.endpoints.json
@@ -1081,3 +1074,11 @@ c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\refint\Poker_PreflopRange.dll
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\Poker_PreflopRange.pdb
 c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\ref\Poker_PreflopRange.dll
+c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\Poker_PreflopRange.q5pz6jjhf4.pdb
+c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\Poker_PreflopRange.aap7wh2qu4.wasm
+c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\Poker_PreflopRange.aap7wh2qu4.wasm.gz
+c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\bin\Debug\net9.0\wwwroot\_framework\Poker_PreflopRange.q5pz6jjhf4.pdb.gz
+c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\Poker_PreflopRange.sourcelink.json
+c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\compressed\3cpr90n22w-aap7wh2qu4.gz
+c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\compressed\ippv6ysdn8-q5pz6jjhf4.gz
+c:\Users\luke.harrington\source\repos\Poker_PreflopRange\Poker_PreflopRange\obj\Debug\net9.0\compressed\mox8krtpit-ufgzfvupw0.gz
