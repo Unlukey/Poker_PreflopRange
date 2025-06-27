@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Poker_PreflopRange")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e4013c5b9be5da79cc1792618bb97104ce777cbc")]
 [assembly: System.Reflection.AssemblyProductAttribute("Poker_PreflopRange")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Poker_PreflopRange")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
