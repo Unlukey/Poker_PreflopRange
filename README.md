@@ -2,7 +2,7 @@
 
 A Blazor WebAssembly application for poker preflop range analysis.
 
-*Currently being deployed to GitHub Pages...*
+*Now deployed to GitHub Pages!*
 
 ## Live Demo
 

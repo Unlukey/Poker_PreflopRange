@@ -46,6 +46,12 @@ jobs:
       - name: Publish
         run: dotnet publish Poker_PreflopRange/Poker_PreflopRange.csproj -c Release -o dist
       
+      - name: Fix base path for GitHub Pages
+        run: sed -i 's/<base href="\/" \/>/<base href="\/Poker_PreflopRange\/" \/>/g' dist/wwwroot/index.html
+      
+      - name: Add .nojekyll file
+        run: touch dist/wwwroot/.nojekyll
+      
       - name: Setup Pages
         uses: actions/configure-pages@v5
       
