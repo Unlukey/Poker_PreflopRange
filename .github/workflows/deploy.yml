@@ -1,0 +1,46 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy-to-github-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ./Poker_PreflopRange/Poker_PreflopRange.csproj
+
+      - name: Build
+        run: dotnet build ./Poker_PreflopRange/Poker_PreflopRange.csproj --no-restore
+
+      - name: Publish
+        run: dotnet publish ./Poker_PreflopRange/Poker_PreflopRange.csproj -c Release -o release --nologo
+
+      # Change the base-tag in index.html from '/' to 'Poker_PreflopRange' to match GitHub Pages repository subdirectory
+      - name: Change base-tag in index.html
+        run: sed -i 's/<base href="\/" \/>/<base href="\/Poker_PreflopRange\/" \/>/g' release/wwwroot/index.html
+
+      # Copy index.html to 404.html to serve the same file when a file is not found
+      - name: copy index.html to 404.html
+        run: cp release/wwwroot/index.html release/wwwroot/404.html
+
+      # Add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project
+      - name: Add .nojekyll file
+        run: touch release/wwwroot/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: release/wwwroot
