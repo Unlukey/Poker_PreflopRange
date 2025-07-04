@@ -43,6 +43,15 @@
         <span class="dismiss">🗙</span>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        window.focusElement = (element) => {
+            if (element) {
+                setTimeout(() => {
+                    element.focus();
+                }, 100);
+            }
+        };
+    </script>
 </body>
 
 </html>

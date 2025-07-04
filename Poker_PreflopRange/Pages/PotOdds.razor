@@ -1,5 +1,6 @@
 @page "/pot-odds"
 @using System.Globalization
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Pot Odds Trainer</PageTitle>
 
@@ -25,6 +26,7 @@
             <label for="userAnswer">Your Answer (%):</label>
             <input type="number" 
                    id="userAnswer" 
+                   @ref="userAnswerInput"
                    @bind="UserAnswer" 
                    @bind:event="oninput"
                    @onkeypress="HandleKeyPress"
@@ -64,6 +66,8 @@
 </div>
 
 @code {
+    private ElementReference userAnswerInput;
+    
     // Game state
     private int CurrentPot = 0;
     private int CurrentBet = 0;
@@ -343,6 +347,14 @@
         GenerateNewQuestion();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await FocusInputAsync();
+        }
+    }
+
     private void GenerateNewQuestion()
     {
         var scenario = scenarios[random.Next(scenarios.Count)];
@@ -355,6 +367,18 @@
         ShowResult = false;
         IsAnswering = false;
         FeedbackType = "";
+    }
+
+    private async Task FocusInputAsync()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("focusElement", userAnswerInput);
+        }
+        catch
+        {
+            // Ignore focus errors in case the element isn't ready
+        }
     }
 
     private async Task HandleKeyPress(KeyboardEventArgs e)
@@ -425,10 +449,11 @@
         StateHasChanged();
     }
 
-    private void NextQuestion()
+    private async void NextQuestion()
     {
         GenerateNewQuestion();
         StateHasChanged();
+        await FocusInputAsync();
     }
 
     private string GetFeedbackClass()
