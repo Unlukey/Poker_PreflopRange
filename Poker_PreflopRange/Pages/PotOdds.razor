@@ -1,0 +1,455 @@
+@page "/pot-odds"
+@using System.Globalization
+
+<PageTitle>Pot Odds Trainer</PageTitle>
+
+<div class="poker-game-container">
+    <h1>Pot Odds Trainer</h1>
+    <p class="game-instructions">Enter the pot odds percentage to the nearest whole number.</p>
+    
+    <div class="pot-odds-display">
+        <div class="pot-bet-container">
+            <div class="pot-bet-item">
+                <label>Pot:</label>
+                <span class="value">@CurrentPot</span>
+            </div>
+            <div class="pot-bet-item">
+                <label>Bet:</label>
+                <span class="value">@CurrentBet</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="answer-section">
+        <div class="input-container">
+            <label for="userAnswer">Your Answer (%):</label>
+            <input type="number" 
+                   id="userAnswer" 
+                   @bind="UserAnswer" 
+                   @bind:event="oninput"
+                   @onkeypress="HandleKeyPress"
+                   disabled="@IsAnswering"
+                   placeholder="Enter percentage"
+                   maxlength="2" 
+                   min="0" 
+                   max="99" />
+            <button class="btn btn-primary submit-btn" 
+                    @onclick="HandleButtonClick" 
+                    disabled="@(IsAnswering || (!ShowResult && string.IsNullOrWhiteSpace(UserAnswer)))">
+                @GetButtonText()
+            </button>
+        </div>
+        
+        <div class="result-container">
+            <div class="feedback @GetFeedbackClass()">
+                @if (ShowResult)
+                {
+                    <span>@GetFeedbackMessage() Correct answer: @CorrectAnswer.ToString("F2")%</span>
+                }
+                else
+                {
+                    <span>Correct answer:</span>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <div class="navigation-section">
+        <!-- Button functionality moved to HandleButtonClick method -->
+    </div>
+    
+    <div class="score-container">
+        <p>Score: @CorrectAnswers / @TotalAnswers (@(TotalAnswers > 0 ? Math.Round((double)CorrectAnswers / TotalAnswers * 100, 1) : 0)%)</p>
+    </div>
+</div>
+
+@code {
+    // Game state
+    private int CurrentPot = 0;
+    private int CurrentBet = 0;
+    private string UserAnswer = "";
+    private double CorrectAnswer = 0;
+    private bool IsAnswering = false;
+    private bool ShowResult = false;
+    private int CorrectAnswers = 0;
+    private int TotalAnswers = 0;
+    private string FeedbackType = "";
+    private Random random = new();
+
+    // Data structure for pot odds scenarios
+    private class PotOddsScenario
+    {
+        public int Pot { get; set; }
+        public int Bet { get; set; }
+        public double PotOdds { get; set; }
+    }
+
+    // Embedded data from the CSV file
+    private List<PotOddsScenario> scenarios = new List<PotOddsScenario>
+    {
+        new() { Pot = 20, Bet = 2, PotOdds = 9.09 },
+        new() { Pot = 20, Bet = 4, PotOdds = 16.67 },
+        new() { Pot = 20, Bet = 6, PotOdds = 23.08 },
+        new() { Pot = 20, Bet = 8, PotOdds = 28.57 },
+        new() { Pot = 20, Bet = 10, PotOdds = 33.33 },
+        new() { Pot = 20, Bet = 12, PotOdds = 37.5 },
+        new() { Pot = 20, Bet = 14, PotOdds = 41.18 },
+        new() { Pot = 20, Bet = 16, PotOdds = 44.44 },
+        new() { Pot = 20, Bet = 18, PotOdds = 47.37 },
+        new() { Pot = 20, Bet = 20, PotOdds = 50.0 },
+        new() { Pot = 20, Bet = 22, PotOdds = 52.38 },
+        new() { Pot = 20, Bet = 24, PotOdds = 54.55 },
+        new() { Pot = 20, Bet = 26, PotOdds = 56.52 },
+        new() { Pot = 20, Bet = 28, PotOdds = 58.33 },
+        new() { Pot = 20, Bet = 30, PotOdds = 60.0 },
+        new() { Pot = 22, Bet = 22, PotOdds = 50.0 },
+        new() { Pot = 24, Bet = 6, PotOdds = 20.0 },
+        new() { Pot = 24, Bet = 12, PotOdds = 33.33 },
+        new() { Pot = 24, Bet = 18, PotOdds = 42.86 },
+        new() { Pot = 24, Bet = 24, PotOdds = 50.0 },
+        new() { Pot = 24, Bet = 30, PotOdds = 55.56 },
+        new() { Pot = 24, Bet = 36, PotOdds = 60.0 },
+        new() { Pot = 26, Bet = 26, PotOdds = 50.0 },
+        new() { Pot = 28, Bet = 14, PotOdds = 33.33 },
+        new() { Pot = 28, Bet = 28, PotOdds = 50.0 },
+        new() { Pot = 28, Bet = 42, PotOdds = 60.0 },
+        new() { Pot = 30, Bet = 6, PotOdds = 16.67 },
+        new() { Pot = 30, Bet = 12, PotOdds = 28.57 },
+        new() { Pot = 30, Bet = 18, PotOdds = 37.5 },
+        new() { Pot = 30, Bet = 24, PotOdds = 44.44 },
+        new() { Pot = 30, Bet = 30, PotOdds = 50.0 },
+        new() { Pot = 30, Bet = 36, PotOdds = 54.55 },
+        new() { Pot = 30, Bet = 42, PotOdds = 58.33 },
+        new() { Pot = 32, Bet = 8, PotOdds = 20.0 },
+        new() { Pot = 32, Bet = 16, PotOdds = 33.33 },
+        new() { Pot = 32, Bet = 24, PotOdds = 42.86 },
+        new() { Pot = 32, Bet = 32, PotOdds = 50.0 },
+        new() { Pot = 32, Bet = 40, PotOdds = 55.56 },
+        new() { Pot = 32, Bet = 48, PotOdds = 60.0 },
+        new() { Pot = 40, Bet = 2, PotOdds = 4.76 },
+        new() { Pot = 40, Bet = 4, PotOdds = 9.09 },
+        new() { Pot = 40, Bet = 6, PotOdds = 13.04 },
+        new() { Pot = 40, Bet = 8, PotOdds = 16.67 },
+        new() { Pot = 40, Bet = 10, PotOdds = 20.0 },
+        new() { Pot = 40, Bet = 12, PotOdds = 23.08 },
+        new() { Pot = 40, Bet = 14, PotOdds = 25.93 },
+        new() { Pot = 40, Bet = 16, PotOdds = 28.57 },
+        new() { Pot = 40, Bet = 18, PotOdds = 31.03 },
+        new() { Pot = 40, Bet = 20, PotOdds = 33.33 },
+        new() { Pot = 40, Bet = 22, PotOdds = 35.48 },
+        new() { Pot = 40, Bet = 24, PotOdds = 37.5 },
+        new() { Pot = 40, Bet = 26, PotOdds = 39.39 },
+        new() { Pot = 40, Bet = 28, PotOdds = 41.18 },
+        new() { Pot = 40, Bet = 30, PotOdds = 42.86 },
+        new() { Pot = 40, Bet = 32, PotOdds = 44.44 },
+        new() { Pot = 40, Bet = 34, PotOdds = 45.95 },
+        new() { Pot = 40, Bet = 36, PotOdds = 47.37 },
+        new() { Pot = 40, Bet = 38, PotOdds = 48.72 },
+        new() { Pot = 40, Bet = 40, PotOdds = 50.0 },
+        new() { Pot = 40, Bet = 42, PotOdds = 51.22 },
+        new() { Pot = 40, Bet = 44, PotOdds = 52.38 },
+        new() { Pot = 40, Bet = 46, PotOdds = 53.49 },
+        new() { Pot = 40, Bet = 48, PotOdds = 54.55 },
+        new() { Pot = 40, Bet = 50, PotOdds = 55.56 },
+        new() { Pot = 40, Bet = 52, PotOdds = 56.52 },
+        new() { Pot = 40, Bet = 54, PotOdds = 57.45 },
+        new() { Pot = 40, Bet = 56, PotOdds = 58.33 },
+        new() { Pot = 40, Bet = 58, PotOdds = 59.18 },
+        new() { Pot = 40, Bet = 60, PotOdds = 60.0 },
+        new() { Pot = 60, Bet = 6, PotOdds = 9.09 },
+        new() { Pot = 60, Bet = 12, PotOdds = 16.67 },
+        new() { Pot = 60, Bet = 18, PotOdds = 23.08 },
+        new() { Pot = 60, Bet = 24, PotOdds = 28.57 },
+        new() { Pot = 60, Bet = 30, PotOdds = 33.33 },
+        new() { Pot = 60, Bet = 36, PotOdds = 37.5 },
+        new() { Pot = 60, Bet = 42, PotOdds = 41.18 },
+        new() { Pot = 60, Bet = 48, PotOdds = 44.44 },
+        new() { Pot = 60, Bet = 54, PotOdds = 47.37 },
+        new() { Pot = 60, Bet = 60, PotOdds = 50.0 },
+        new() { Pot = 60, Bet = 66, PotOdds = 52.38 },
+        new() { Pot = 60, Bet = 72, PotOdds = 54.55 },
+        new() { Pot = 60, Bet = 78, PotOdds = 56.52 },
+        new() { Pot = 60, Bet = 84, PotOdds = 58.33 },
+        new() { Pot = 60, Bet = 90, PotOdds = 60.0 },
+        new() { Pot = 80, Bet = 4, PotOdds = 4.76 },
+        new() { Pot = 80, Bet = 8, PotOdds = 9.09 },
+        new() { Pot = 80, Bet = 12, PotOdds = 13.04 },
+        new() { Pot = 80, Bet = 16, PotOdds = 16.67 },
+        new() { Pot = 80, Bet = 20, PotOdds = 20.0 },
+        new() { Pot = 80, Bet = 24, PotOdds = 23.08 },
+        new() { Pot = 80, Bet = 28, PotOdds = 25.93 },
+        new() { Pot = 80, Bet = 32, PotOdds = 28.57 },
+        new() { Pot = 80, Bet = 36, PotOdds = 31.03 },
+        new() { Pot = 80, Bet = 40, PotOdds = 33.33 },
+        new() { Pot = 80, Bet = 44, PotOdds = 35.48 },
+        new() { Pot = 80, Bet = 48, PotOdds = 37.5 },
+        new() { Pot = 80, Bet = 52, PotOdds = 39.39 },
+        new() { Pot = 80, Bet = 56, PotOdds = 41.18 },
+        new() { Pot = 80, Bet = 60, PotOdds = 42.86 },
+        new() { Pot = 80, Bet = 64, PotOdds = 44.44 },
+        new() { Pot = 80, Bet = 68, PotOdds = 45.95 },
+        new() { Pot = 80, Bet = 72, PotOdds = 47.37 },
+        new() { Pot = 80, Bet = 76, PotOdds = 48.72 },
+        new() { Pot = 80, Bet = 80, PotOdds = 50.0 },
+        new() { Pot = 80, Bet = 84, PotOdds = 51.22 },
+        new() { Pot = 80, Bet = 88, PotOdds = 52.38 },
+        new() { Pot = 80, Bet = 92, PotOdds = 53.49 },
+        new() { Pot = 80, Bet = 96, PotOdds = 54.55 },
+        new() { Pot = 80, Bet = 100, PotOdds = 55.56 },
+        new() { Pot = 80, Bet = 104, PotOdds = 56.52 },
+        new() { Pot = 80, Bet = 108, PotOdds = 57.45 },
+        new() { Pot = 80, Bet = 112, PotOdds = 58.33 },
+        new() { Pot = 80, Bet = 116, PotOdds = 59.18 },
+        new() { Pot = 80, Bet = 120, PotOdds = 60.0 },
+        new() { Pot = 100, Bet = 10, PotOdds = 9.09 },
+        new() { Pot = 100, Bet = 20, PotOdds = 16.67 },
+        new() { Pot = 100, Bet = 30, PotOdds = 23.08 },
+        new() { Pot = 100, Bet = 40, PotOdds = 28.57 },
+        new() { Pot = 100, Bet = 50, PotOdds = 33.33 },
+        new() { Pot = 100, Bet = 60, PotOdds = 37.5 },
+        new() { Pot = 100, Bet = 70, PotOdds = 41.18 },
+        new() { Pot = 100, Bet = 80, PotOdds = 44.44 },
+        new() { Pot = 100, Bet = 90, PotOdds = 47.37 },
+        new() { Pot = 100, Bet = 100, PotOdds = 50.0 },
+        new() { Pot = 100, Bet = 110, PotOdds = 52.38 },
+        new() { Pot = 100, Bet = 120, PotOdds = 54.55 },
+        new() { Pot = 100, Bet = 130, PotOdds = 56.52 },
+        new() { Pot = 100, Bet = 140, PotOdds = 58.33 },
+        new() { Pot = 100, Bet = 150, PotOdds = 60.0 },
+        new() { Pot = 120, Bet = 6, PotOdds = 4.76 },
+        new() { Pot = 120, Bet = 12, PotOdds = 9.09 },
+        new() { Pot = 120, Bet = 18, PotOdds = 13.04 },
+        new() { Pot = 120, Bet = 24, PotOdds = 16.67 },
+        new() { Pot = 120, Bet = 30, PotOdds = 20.0 },
+        new() { Pot = 120, Bet = 36, PotOdds = 23.08 },
+        new() { Pot = 120, Bet = 42, PotOdds = 25.93 },
+        new() { Pot = 120, Bet = 48, PotOdds = 28.57 },
+        new() { Pot = 120, Bet = 54, PotOdds = 31.03 },
+        new() { Pot = 120, Bet = 60, PotOdds = 33.33 },
+        new() { Pot = 120, Bet = 66, PotOdds = 35.48 },
+        new() { Pot = 120, Bet = 72, PotOdds = 37.5 },
+        new() { Pot = 120, Bet = 78, PotOdds = 39.39 },
+        new() { Pot = 120, Bet = 84, PotOdds = 41.18 },
+        new() { Pot = 120, Bet = 90, PotOdds = 42.86 },
+        new() { Pot = 120, Bet = 96, PotOdds = 44.44 },
+        new() { Pot = 120, Bet = 102, PotOdds = 45.95 },
+        new() { Pot = 120, Bet = 108, PotOdds = 47.37 },
+        new() { Pot = 120, Bet = 114, PotOdds = 48.72 },
+        new() { Pot = 120, Bet = 120, PotOdds = 50.0 },
+        new() { Pot = 120, Bet = 126, PotOdds = 51.22 },
+        new() { Pot = 120, Bet = 132, PotOdds = 52.38 },
+        new() { Pot = 120, Bet = 138, PotOdds = 53.49 },
+        new() { Pot = 120, Bet = 144, PotOdds = 54.55 },
+        new() { Pot = 120, Bet = 150, PotOdds = 55.56 },
+        new() { Pot = 120, Bet = 156, PotOdds = 56.52 },
+        new() { Pot = 120, Bet = 162, PotOdds = 57.45 },
+        new() { Pot = 120, Bet = 168, PotOdds = 58.33 },
+        new() { Pot = 120, Bet = 174, PotOdds = 59.18 },
+        new() { Pot = 120, Bet = 180, PotOdds = 60.0 },
+        new() { Pot = 140, Bet = 14, PotOdds = 9.09 },
+        new() { Pot = 140, Bet = 28, PotOdds = 16.67 },
+        new() { Pot = 140, Bet = 42, PotOdds = 23.08 },
+        new() { Pot = 140, Bet = 56, PotOdds = 28.57 },
+        new() { Pot = 140, Bet = 70, PotOdds = 33.33 },
+        new() { Pot = 140, Bet = 84, PotOdds = 37.5 },
+        new() { Pot = 140, Bet = 98, PotOdds = 41.18 },
+        new() { Pot = 140, Bet = 112, PotOdds = 44.44 },
+        new() { Pot = 140, Bet = 126, PotOdds = 47.37 },
+        new() { Pot = 140, Bet = 140, PotOdds = 50.0 },
+        new() { Pot = 140, Bet = 154, PotOdds = 52.38 },
+        new() { Pot = 140, Bet = 168, PotOdds = 54.55 },
+        new() { Pot = 140, Bet = 182, PotOdds = 56.52 },
+        new() { Pot = 140, Bet = 196, PotOdds = 58.33 },
+        new() { Pot = 140, Bet = 210, PotOdds = 60.0 },
+        new() { Pot = 160, Bet = 8, PotOdds = 4.76 },
+        new() { Pot = 160, Bet = 16, PotOdds = 9.09 },
+        new() { Pot = 160, Bet = 24, PotOdds = 13.04 },
+        new() { Pot = 160, Bet = 32, PotOdds = 16.67 },
+        new() { Pot = 160, Bet = 40, PotOdds = 20.0 },
+        new() { Pot = 160, Bet = 48, PotOdds = 23.08 },
+        new() { Pot = 160, Bet = 56, PotOdds = 25.93 },
+        new() { Pot = 160, Bet = 64, PotOdds = 28.57 },
+        new() { Pot = 160, Bet = 72, PotOdds = 31.03 },
+        new() { Pot = 160, Bet = 80, PotOdds = 33.33 },
+        new() { Pot = 160, Bet = 88, PotOdds = 35.48 },
+        new() { Pot = 160, Bet = 96, PotOdds = 37.5 },
+        new() { Pot = 160, Bet = 104, PotOdds = 39.39 },
+        new() { Pot = 160, Bet = 112, PotOdds = 41.18 },
+        new() { Pot = 160, Bet = 120, PotOdds = 42.86 },
+        new() { Pot = 160, Bet = 128, PotOdds = 44.44 },
+        new() { Pot = 160, Bet = 136, PotOdds = 45.95 },
+        new() { Pot = 160, Bet = 144, PotOdds = 47.37 },
+        new() { Pot = 160, Bet = 152, PotOdds = 48.72 },
+        new() { Pot = 160, Bet = 160, PotOdds = 50.0 },
+        new() { Pot = 160, Bet = 168, PotOdds = 51.22 },
+        new() { Pot = 160, Bet = 176, PotOdds = 52.38 },
+        new() { Pot = 160, Bet = 184, PotOdds = 53.49 },
+        new() { Pot = 160, Bet = 192, PotOdds = 54.55 },
+        new() { Pot = 160, Bet = 200, PotOdds = 55.56 },
+        new() { Pot = 160, Bet = 208, PotOdds = 56.52 },
+        new() { Pot = 160, Bet = 216, PotOdds = 57.45 },
+        new() { Pot = 160, Bet = 224, PotOdds = 58.33 },
+        new() { Pot = 160, Bet = 232, PotOdds = 59.18 },
+        new() { Pot = 160, Bet = 240, PotOdds = 60.0 },
+        new() { Pot = 180, Bet = 18, PotOdds = 9.09 },
+        new() { Pot = 180, Bet = 36, PotOdds = 16.67 },
+        new() { Pot = 180, Bet = 54, PotOdds = 23.08 },
+        new() { Pot = 180, Bet = 72, PotOdds = 28.57 },
+        new() { Pot = 180, Bet = 90, PotOdds = 33.33 },
+        new() { Pot = 180, Bet = 108, PotOdds = 37.5 },
+        new() { Pot = 180, Bet = 126, PotOdds = 41.18 },
+        new() { Pot = 180, Bet = 144, PotOdds = 44.44 },
+        new() { Pot = 180, Bet = 162, PotOdds = 47.37 },
+        new() { Pot = 180, Bet = 180, PotOdds = 50.0 },
+        new() { Pot = 180, Bet = 198, PotOdds = 52.38 },
+        new() { Pot = 180, Bet = 216, PotOdds = 54.55 },
+        new() { Pot = 180, Bet = 234, PotOdds = 56.52 },
+        new() { Pot = 180, Bet = 252, PotOdds = 58.33 },
+        new() { Pot = 180, Bet = 270, PotOdds = 60.0 },
+        new() { Pot = 200, Bet = 10, PotOdds = 4.76 },
+        new() { Pot = 200, Bet = 20, PotOdds = 9.09 },
+        new() { Pot = 200, Bet = 30, PotOdds = 13.04 },
+        new() { Pot = 200, Bet = 40, PotOdds = 16.67 },
+        new() { Pot = 200, Bet = 50, PotOdds = 20.0 },
+        new() { Pot = 200, Bet = 60, PotOdds = 23.08 },
+        new() { Pot = 200, Bet = 70, PotOdds = 25.93 },
+        new() { Pot = 200, Bet = 80, PotOdds = 28.57 },
+        new() { Pot = 200, Bet = 90, PotOdds = 31.03 },
+        new() { Pot = 200, Bet = 100, PotOdds = 33.33 },
+        new() { Pot = 200, Bet = 110, PotOdds = 35.48 },
+        new() { Pot = 200, Bet = 120, PotOdds = 37.5 },
+        new() { Pot = 200, Bet = 130, PotOdds = 39.39 },
+        new() { Pot = 200, Bet = 140, PotOdds = 41.18 },
+        new() { Pot = 200, Bet = 150, PotOdds = 42.86 },
+        new() { Pot = 200, Bet = 160, PotOdds = 44.44 },
+        new() { Pot = 200, Bet = 170, PotOdds = 45.95 },
+        new() { Pot = 200, Bet = 180, PotOdds = 47.37 },
+        new() { Pot = 200, Bet = 190, PotOdds = 48.72 },
+        new() { Pot = 200, Bet = 200, PotOdds = 50.0 },
+        new() { Pot = 200, Bet = 210, PotOdds = 51.22 },
+        new() { Pot = 200, Bet = 220, PotOdds = 52.38 },
+        new() { Pot = 200, Bet = 230, PotOdds = 53.49 },
+        new() { Pot = 200, Bet = 240, PotOdds = 54.55 },
+        new() { Pot = 200, Bet = 250, PotOdds = 55.56 },
+        new() { Pot = 200, Bet = 260, PotOdds = 56.52 },
+        new() { Pot = 200, Bet = 270, PotOdds = 57.45 },
+        new() { Pot = 200, Bet = 280, PotOdds = 58.33 },
+        new() { Pot = 200, Bet = 290, PotOdds = 59.18 },
+        new() { Pot = 200, Bet = 300, PotOdds = 60.0 }
+    };
+
+    protected override void OnInitialized()
+    {
+        GenerateNewQuestion();
+    }
+
+    private void GenerateNewQuestion()
+    {
+        var scenario = scenarios[random.Next(scenarios.Count)];
+        CurrentPot = scenario.Pot;
+        CurrentBet = scenario.Bet;
+        CorrectAnswer = scenario.PotOdds;
+        
+        // Reset form state
+        UserAnswer = "";
+        ShowResult = false;
+        IsAnswering = false;
+        FeedbackType = "";
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !IsAnswering)
+        {
+            await HandleButtonClick();
+        }
+    }
+
+    private async Task HandleButtonClick()
+    {
+        if (IsAnswering) return;
+
+        if (ShowResult)
+        {
+            // Button is in "Next" mode
+            NextQuestion();
+        }
+        else
+        {
+            // Button is in "Submit" mode
+            if (!string.IsNullOrWhiteSpace(UserAnswer))
+            {
+                await SubmitAnswer();
+            }
+        }
+    }
+
+    private string GetButtonText()
+    {
+        return ShowResult ? "Next Question" : "Submit";
+    }
+
+    private async Task SubmitAnswer()
+    {
+        if (IsAnswering || string.IsNullOrWhiteSpace(UserAnswer)) return;
+
+        IsAnswering = true;
+        TotalAnswers++;
+
+        if (int.TryParse(UserAnswer, out int userAnswerInt))
+        {
+            int correctAnswerRounded = (int)Math.Round(CorrectAnswer);
+            int difference = Math.Abs(userAnswerInt - correctAnswerRounded);
+
+            if (difference == 0)
+            {
+                FeedbackType = "correct";
+                CorrectAnswers++;
+            }
+            else if (difference == 1)
+            {
+                FeedbackType = "close";
+            }
+            else
+            {
+                FeedbackType = "incorrect";
+            }
+        }
+        else
+        {
+            FeedbackType = "incorrect";
+        }
+
+        ShowResult = true;
+        IsAnswering = false;
+        StateHasChanged();
+    }
+
+    private void NextQuestion()
+    {
+        GenerateNewQuestion();
+        StateHasChanged();
+    }
+
+    private string GetFeedbackClass()
+    {
+        return FeedbackType switch
+        {
+            "correct" => "feedback-correct",
+            "close" => "feedback-close",
+            "incorrect" => "feedback-incorrect",
+            _ => ""
+        };
+    }
+
+    private string GetFeedbackMessage()
+    {
+        return FeedbackType switch
+        {
+            "correct" => "Correct! 🎉",
+            "close" => "Very close! Off by 1%.",
+            "incorrect" => "Not quite right.",
+            _ => ""
+        };
+    }
+}
