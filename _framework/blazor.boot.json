@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Poker_PreflopRange",
   "resources": {
-    "hash": "sha256-5TNd371foyAY28nP6zZNQHreJgSZYeUziJ+jcVH+72Q=",
+    "hash": "sha256-ih/e001EektKS6uDS+/W0mnpzWEScwm/kd1TJNlCDq8=",
     "fingerprinting": {
       "Microsoft.AspNetCore.Components.s27xfyrnq6.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.zeeiewhbtq.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
@@ -34,7 +34,7 @@
       "System.Text.Json.u93pa0l0y4.wasm": "System.Text.Json.wasm",
       "System.Text.RegularExpressions.3zydt3n8n9.wasm": "System.Text.RegularExpressions.wasm",
       "System.Private.CoreLib.wwi7ppucfh.wasm": "System.Private.CoreLib.wasm",
-      "Poker_PreflopRange.cp9axmiv1k.wasm": "Poker_PreflopRange.wasm",
+      "Poker_PreflopRange.u955dg2u1g.wasm": "Poker_PreflopRange.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.rtblh4npr3.js": "dotnet.native.js",
       "dotnet.native.aqhezbunpl.wasm": "dotnet.native.wasm",
@@ -91,7 +91,7 @@
       "System.Text.Encodings.Web.j8jbnca1on.wasm": "sha256-3cJRUrFjSoiaGlI3OmHNndawtN8Y5lEgLHYI76jlAvo=",
       "System.Text.Json.u93pa0l0y4.wasm": "sha256-0nbwSDJN6TofCR7dRVJthNFoOU5NdBoyzFtHdVa6lXs=",
       "System.Text.RegularExpressions.3zydt3n8n9.wasm": "sha256-sXTH9c57ccmOHrE+Bpsiewg0xWGtHrbl8KBKpTJW9VA=",
-      "Poker_PreflopRange.cp9axmiv1k.wasm": "sha256-oAiZqwfDNBh/vvvILdDmhH9YXb8klJST0PfrRQkqdvY="
+      "Poker_PreflopRange.u955dg2u1g.wasm": "sha256-8ra1yiZDEzVgcN8LM920ZVVw8V+BttwV98t24SQbCPs="
     }
   },
   "cacheBootResources": true,
