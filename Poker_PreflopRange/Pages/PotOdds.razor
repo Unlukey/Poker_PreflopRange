@@ -44,7 +44,7 @@
             <div class="feedback @GetFeedbackClass()">
                 @if (ShowResult)
                 {
-                    <span>@GetFeedbackMessage() Correct answer: @CorrectAnswer.ToString("F2")%</span>
+                    <span>Correct answer: @CorrectAnswer.ToString("F2")%</span>
                 }
                 else
                 {
@@ -438,17 +438,6 @@
             "correct" => "feedback-correct",
             "close" => "feedback-close",
             "incorrect" => "feedback-incorrect",
-            _ => ""
-        };
-    }
-
-    private string GetFeedbackMessage()
-    {
-        return FeedbackType switch
-        {
-            "correct" => "Correct! 🎉",
-            "close" => "Very close! Off by 1%.",
-            "incorrect" => "Not quite right.",
             _ => ""
         };
     }
