@@ -1,343 +1,41 @@
 ﻿@page "/"
-@using System.Timers
+@using Microsoft.AspNetCore.Components
 
-<PageTitle>Poker Preflop Range Trainer</PageTitle>
+<PageTitle>Poker Training Hub</PageTitle>
 
-<div class="poker-game-container">
-    <h1>BTN Preflop Range Trainer</h1>
-    <p class="game-instructions">Should these cards be played from the Button (BTN) position?</p>
+<div class="home-container">
+    <h1 class="home-title">Poker Training Hub</h1>
+    <p class="home-subtitle">
+        Welcome to your poker training platform! Choose from different training modules to improve your game.
+    </p>
     
-    <div class="cards-container">
-        <div class="card @GetCardClass(CurrentCard1)">
-            @GetCardDisplay(CurrentCard1)
-        </div>
-        <div class="card @GetCardClass(CurrentCard2)">
-            @GetCardDisplay(CurrentCard2)
-        </div>
+    <div class="nav-buttons-container">
+        <a href="/preflop-range" class="nav-button">
+            <span class="nav-button-icon">🃏</span>
+            <div class="nav-button-title">Preflop Range Trainer</div>
+            <div class="nav-button-description">
+                Practice Button (BTN) position preflop ranges. Learn which hands to play and which to fold.
+            </div>
+        </a>
+        
+        <a href="/counter" class="nav-button">
+            <span class="nav-button-icon">🔢</span>
+            <div class="nav-button-title">Counter Demo</div>
+            <div class="nav-button-description">
+                Basic Blazor counter component demonstration.
+            </div>
+        </a>
+        
+        <a href="/weather" class="nav-button">
+            <span class="nav-button-icon">🌤️</span>
+            <div class="nav-button-title">Weather Demo</div>
+            <div class="nav-button-description">
+                Weather forecast data display example.
+            </div>
+        </a>
     </div>
     
-    <div class="hand-name">
-        <h3>@GetHandName()</h3>
-    </div>
-    
-    <div class="buttons-container">
-        <button class="btn game-btn @GetButtonClass("Yes")" 
-                @onclick="() => AnswerQuestion(true)" 
-                disabled="@IsAnswering">
-            Yes
-        </button>
-        <button class="btn game-btn @GetButtonClass("No")" 
-                @onclick="() => AnswerQuestion(false)" 
-                disabled="@IsAnswering">
-            No
-        </button>
-    </div>
-    
-    <div class="score-container">
-        <p>Score: @CorrectAnswers / @TotalAnswers (@(TotalAnswers > 0 ? Math.Round((double)CorrectAnswers / TotalAnswers * 100, 1) : 0)%)</p>
+    <div style="margin-top: 2rem; color: #666;">
+        <p>More training modules coming soon!</p>
     </div>
 </div>
-
-<style>
-    .poker-game-container {
-        text-align: center;
-        padding: 2rem;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    
-    .game-instructions {
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
-        color: #666;
-    }
-    
-    .cards-container {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .card {
-        width: 120px;
-        height: 168px;
-        border: 2px solid #333;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
-        font-weight: bold;
-        background: white;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    
-    .card.red {
-        color: #dc3545;
-    }
-    
-    .card.black {
-        color: #333;
-    }
-    
-    .hand-name {
-        margin-bottom: 2rem;
-    }
-    
-    .hand-name h3 {
-        font-size: 1.8rem;
-        font-weight: bold;
-        color: #333;
-    }
-    
-    .buttons-container {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-    
-    .game-btn {
-        padding: 1rem 2rem;
-        font-size: 1.5rem;
-        font-weight: bold;
-        border-radius: 8px;
-        min-width: 120px;
-        transition: all 0.3s ease;
-    }
-    
-    .game-btn:not(:disabled):hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    
-    .game-btn.btn-correct {
-        background-color: #28a745 !important;
-        border-color: #28a745 !important;
-        color: white !important;
-    }
-    
-    .game-btn.btn-incorrect {
-        background-color: #dc3545 !important;
-        border-color: #dc3545 !important;
-        color: white !important;
-    }
-    
-    .score-container {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: #333;
-    }
-</style>
-
-@code {
-    // Card representation
-    public class Card
-    {
-        public string Rank { get; set; } = "";
-        public string Suit { get; set; } = "";
-        public bool IsRed => Suit == "♥" || Suit == "♦";
-    }
-    
-    // Game state
-    private Card CurrentCard1 = new();
-    private Card CurrentCard2 = new();
-    private Random random = new();
-    private bool IsAnswering = false;
-    private string LastAnswer = "";
-    private int CorrectAnswers = 0;
-    private int TotalAnswers = 0;
-    
-    // Button range - hands that should be played from BTN position (refined GTO range)
-    private readonly HashSet<string> ButtonRange = new()
-    {
-        // All pairs
-        "AA", "KK", "QQ", "JJ", "TT", "99", "88", "77", "66", "55", "44", "33", "22",
-        
-        // All suited aces
-        "AKs", "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A5s", "A4s", "A3s", "A2s",
-        
-        // Offsuit aces (tightened - A2o-A5o are marginal)
-        "AKo", "AQo", "AJo", "ATo", "A9o", "A8o", "A7o", "A6o", "A5o",
-        
-        // All suited kings
-        "KQs", "KJs", "KTs", "K9s", "K8s", "K7s", "K6s", "K5s", "K4s", "K3s", "K2s",
-        
-        // Offsuit kings (tightened)
-        "KQo", "KJo", "KTo", "K9o", "K8o",
-        
-        // All suited queens
-        "QJs", "QTs", "Q9s", "Q8s", "Q7s", "Q6s", "Q5s", "Q4s", "Q3s", "Q2s",
-        
-        // Offsuit queens (tightened)
-        "QJo", "QTo", "Q9o", "Q8o",
-        
-        // All suited jacks
-        "JTs", "J9s", "J8s", "J7s", "J6s", "J5s", "J4s", "J3s", "J2s",
-        
-        // Offsuit jacks (tightened)
-        "JTo", "J9o", "J8o",
-        
-        // All suited tens
-        "T9s", "T8s", "T7s", "T6s", "T5s", "T4s", "T3s", "T2s",
-        
-        // Offsuit tens (tightened)
-        "T9o", "T8o",
-        
-        // All suited nines
-        "98s", "97s", "96s", "95s", "94s", "93s", "92s",
-        
-        // Offsuit nines (tightened)
-        "98o", "97o",
-        
-        // All suited eights
-        "87s", "86s", "85s", "84s", "83s", "82s",
-        
-        // Offsuit eights (tightened)
-        "87o", "86o",
-        
-        // All suited sevens
-        "76s", "75s", "74s", "73s", "72s",
-        
-        // Offsuit sevens (tightened)
-        "76o",
-        
-        // All suited sixes
-        "65s", "64s", "63s", "62s",
-        
-        // Offsuit sixes (tightened)
-        "65o",
-        
-        // All suited fives
-        "54s", "53s", "52s",
-        
-        // Offsuit fives (most removed)
-        "54o",
-        
-        // All suited fours
-        "43s", "42s",
-        
-        // All suited threes
-        "32s"
-        
-        // Note: Most small offsuit hands removed as they're typically folds even from BTN
-    };
-    
-    protected override void OnInitialized()
-    {
-        GenerateNewHand();
-    }
-    
-    private void GenerateNewHand()
-    {
-        var ranks = new[] { "A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2" };
-        var suits = new[] { "♠", "♥", "♦", "♣" };
-        
-        // Generate two different cards
-        do
-        {
-            CurrentCard1 = new Card
-            {
-                Rank = ranks[random.Next(ranks.Length)],
-                Suit = suits[random.Next(suits.Length)]
-            };
-            
-            CurrentCard2 = new Card
-            {
-                Rank = ranks[random.Next(ranks.Length)],
-                Suit = suits[random.Next(suits.Length)]
-            };
-        } while (CurrentCard1.Rank == CurrentCard2.Rank && CurrentCard1.Suit == CurrentCard2.Suit);
-        
-        StateHasChanged();
-    }
-    
-    private string GetCardDisplay(Card card)
-    {
-        return $"{card.Rank}{card.Suit}";
-    }
-    
-    private string GetCardClass(Card card)
-    {
-        return card.IsRed ? "red" : "black";
-    }
-    
-    private string GetHandName()
-    {
-        var card1Rank = CurrentCard1.Rank;
-        var card2Rank = CurrentCard2.Rank;
-        var suited = CurrentCard1.Suit == CurrentCard2.Suit;
-        
-        // Convert rank to numeric value for comparison
-        var getRankValue = (string rank) => rank switch
-        {
-            "A" => 14,
-            "K" => 13,
-            "Q" => 12,
-            "J" => 11,
-            "T" => 10,
-            _ => int.Parse(rank)
-        };
-        
-        var rank1Value = getRankValue(card1Rank);
-        var rank2Value = getRankValue(card2Rank);
-        
-        // Ensure higher rank comes first
-        if (rank1Value < rank2Value)
-        {
-            (card1Rank, card2Rank) = (card2Rank, card1Rank);
-        }
-        
-        // Handle pairs
-        if (card1Rank == card2Rank)
-        {
-            return $"{card1Rank}{card2Rank}";
-        }
-        
-        // Handle non-pairs
-        var suffix = suited ? "s" : "o";
-        return $"{card1Rank}{card2Rank}{suffix}";
-    }
-    
-    private async Task AnswerQuestion(bool playerAnswer)
-    {
-        if (IsAnswering) return;
-        
-        IsAnswering = true;
-        LastAnswer = playerAnswer ? "Yes" : "No";
-        TotalAnswers++;
-        
-        var handName = GetHandName();
-        var correctAnswer = ButtonRange.Contains(handName);
-        var isCorrect = playerAnswer == correctAnswer;
-        
-        if (isCorrect)
-        {
-            CorrectAnswers++;
-        }
-        
-        StateHasChanged();
-        
-        // Wait 1 second to show the result
-        await Task.Delay(1000);
-        
-        // Reset and generate new hand
-        IsAnswering = false;
-        LastAnswer = "";
-        GenerateNewHand();
-    }
-    
-    private string GetButtonClass(string buttonText)
-    {
-        if (!IsAnswering || LastAnswer != buttonText) 
-            return "btn-primary";
-            
-        var handName = GetHandName();
-        var correctAnswer = ButtonRange.Contains(handName);
-        var playerAnsweredYes = buttonText == "Yes";
-        var isCorrect = playerAnsweredYes == correctAnswer;
-        
-        return isCorrect ? "btn-correct" : "btn-incorrect";
-    }
-}

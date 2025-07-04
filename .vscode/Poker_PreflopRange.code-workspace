@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"name": "Poker_PreflopRange",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"dotnet.defaultSolution": "Poker_PreflopRange.sln"
+	}
+}
