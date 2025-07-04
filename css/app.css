@@ -271,3 +271,122 @@ code {
     color: #666;
     line-height: 1.4;
 }
+
+/* Pot Odds Trainer Styles */
+.pot-odds-display {
+    margin-bottom: 2rem;
+}
+
+.pot-bet-container {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.pot-bet-item {
+    text-align: center;
+    padding: 1.5rem;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-width: 120px;
+}
+
+.pot-bet-item label {
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.pot-bet-item .value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.answer-section {
+    margin-bottom: 2rem;
+}
+
+.input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.input-container label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.input-container input {
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    width: 150px;
+    text-align: center;
+}
+
+.input-container input:focus {
+    outline: none;
+    border-color: #1b6ec2;
+}
+
+.submit-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.result-container {
+    margin-top: 1.5rem;
+}
+
+.feedback {
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.feedback-correct {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.feedback-close {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.feedback-incorrect {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.navigation-section {
+    margin-bottom: 2rem;
+}
+
+.next-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
